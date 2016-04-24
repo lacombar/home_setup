@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<channel name="xfce4-panel" version="1.0">
+  <property name="configver" type="int" value="2"/>
+  <property name="panels" type="array">
+    <value type="int" value="1"/>
+    <value type="int" value="2"/>
+    <property name="panel-1" type="empty">
+      <property name="position" type="string" value="p=9;x=955;y=25"/>
+      <property name="length" type="uint" value="100"/>
+      <property name="size" type="uint" value="32"/>
+      <property name="position-locked" type="bool" value="true"/>
+      <property name="disable-struts" type="bool" value="true"/>
+      <property name="plugin-ids" type="array">
+        <value type="int" value="1"/>
+        <value type="int" value="2"/>
+        <value type="int" value="3"/>
+        <value type="int" value="4"/>
+        <value type="int" value="8"/>
+        <value type="int" value="20"/>
+        <value type="int" value="6"/>
+        <value type="int" value="7"/>
+        <value type="int" value="5"/>
+        <value type="int" value="21"/>
+      </property>
+      <property name="length-adjust" type="bool" value="true"/>
+      <property name="output-name" type="string" value="HDMI2"/>
+      <property name="autohide-behavior" type="uint" value="2"/>
+    </property>
+    <property name="panel-2" type="empty">
+      <property name="position" type="string" value="p=10;x=960;y=1049"/>
+      <property name="length" type="uint" value="1"/>
+      <property name="size" type="uint" value="28"/>
+      <property name="position-locked" type="bool" value="true"/>
+      <property name="disable-struts" type="bool" value="false"/>
+      <property name="plugin-ids" type="array">
+        <value type="int" value="9"/>
+        <value type="int" value="10"/>
+        <value type="int" value="11"/>
+        <value type="int" value="12"/>
+        <value type="int" value="13"/>
+        <value type="int" value="14"/>
+        <value type="int" value="15"/>
+        <value type="int" value="18"/>
+        <value type="int" value="17"/>
+        <value type="int" value="16"/>
+        <value type="int" value="19"/>
+      </property>
+      <property name="output-name" type="string" value="HDMI2"/>
+      <property name="autohide-behavior" type="uint" value="2"/>
+    </property>
+  </property>
+  <property name="plugins" type="empty">
+    <property name="plugin-1" type="string" value="tasklist">
+      <property name="flat-buttons" type="bool" value="false"/>
+    </property>
+    <property name="plugin-2" type="string" value="separator">
+      <property name="expand" type="bool" value="true"/>
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-3" type="string" value="systray">
+      <property name="names-visible" type="array">
+        <value type="string" value="vlc"/>
+        <value type="string" value="google-chrome"/>
+        <value type="string" value="google-chrome-beta"/>
+        <value type="string" value="networkmanager applet"/>
+        <value type="string" value="google-chrome-stable"/>
+        <value type="string" value="skype"/>
+        <value type="string" value="yumex"/>
+        <value type="string" value="steam"/>
+        <value type="string" value="pragha music player"/>
+        <value type="string" value="seapplet"/>
+        <value type="string" value="pidgin"/>
+        <value type="string" value="blueman-applet"/>
+        <value type="string" value="solaar"/>
+        <value type="string" value="clipman"/>
+        <value type="string" value="xfce4-power-manager"/>
+        <value type="string" value="scp-dbus-service.py"/>
+        <value type="string" value="banshee"/>
+        <value type="string" value="notes"/>
+        <value type="string" value="abrt"/>
+      </property>
+    </property>
+    <property name="plugin-4" type="string" value="separator">
+      <property name="style" type="uint" value="1"/>
+    </property>
+    <property name="plugin-5" type="string" value="clock">
+      <property name="show-frame" type="bool" value="false"/>
+    </property>
+    <property name="plugin-6" type="string" value="mixer">
+      <property name="sound-card" type="string" value="PlaybackBuiltinAudioAnalogStereoPulseAudioMixer"/>
+      <property name="track" type="string" value="Master"/>
+      <property name="command" type="string" value="xfce4-mixer"/>
+    </property>
+    <property name="plugin-7" type="string" value="separator">
+      <property name="style" type="uint" value="1"/>
+    </property>
+    <property name="plugin-9" type="string" value="applicationsmenu">
+      <property name="show-menu-icons" type="bool" value="false"/>
+      <property name="show-button-title" type="bool" value="false"/>
+    </property>
+    <property name="plugin-10" type="string" value="separator">
+      <property name="style" type="uint" value="1"/>
+    </property>
+    <property name="plugin-11" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="13756560231.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-12" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="13756590501.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-13" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="13779882101.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-14" type="string" value="separator">
+      <property name="style" type="uint" value="1"/>
+    </property>
+    <property name="plugin-15" type="string" value="pager">
+      <property name="rows" type="uint" value="2"/>
+    </property>
+    <property name="plugin-16" type="string" value="separator">
+      <property name="style" type="uint" value="1"/>
+    </property>
+    <property name="plugin-17" type="string" value="actions">
+      <property name="items" type="array">
+        <value type="string" value="-lock-screen"/>
+        <value type="string" value="-switch-user"/>
+        <value type="string" value="-separator"/>
+        <value type="string" value="-suspend"/>
+        <value type="string" value="-hibernate"/>
+        <value type="string" value="-separator"/>
+        <value type="string" value="-shutdown"/>
+        <value type="string" value="-restart"/>
+        <value type="string" value="-separator"/>
+        <value type="string" value="+logout"/>
+        <value type="string" value="-logout-dialog"/>
+      </property>
+      <property name="appearance" type="uint" value="0"/>
+      <property name="ask-confirmation" type="bool" value="false"/>
+    </property>
+    <property name="plugin-18" type="string" value="separator">
+      <property name="style" type="uint" value="1"/>
+    </property>
+    <property name="plugin-19" type="string" value="clock">
+      <property name="show-frame" type="bool" value="false"/>
+    </property>
+    <property name="plugin-8" type="string" value="xfce4-sensors-plugin"/>
+    <property name="plugin-20" type="string" value="separator">
+      <property name="style" type="uint" value="1"/>
+    </property>
+    <property name="plugin-21" type="string" value="xkb-plugin"/>
+    <property name="clipman" type="empty">
+      <property name="tweaks" type="empty">
+        <property name="never-confirm-history-clear" type="bool" value="true"/>
+      </property>
+      <property name="settings" type="empty">
+        <property name="max-texts-in-history" type="uint" value="50"/>
+      </property>
+    </property>
+  </property>
+</channel>
