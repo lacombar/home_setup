@@ -1,0 +1,69 @@
+[core]
+	editor = vim
+	deltaBaseCacheLimit = 1G
+	quotepath = false
+[user]
+	email = lacombar@gmail.com
+	name = Arnaud Lacombe
+[gc]
+	auto = 0
+	autopacklimit = 0
+	reflogExpireUnreachable = 42
+[imap]
+	folder = "[Gmail]/Drafts"
+	host = imaps://imap.gmail.com
+	user = lacombar
+	sslverify = no
+[sendemail]
+	smtpserver = smtp.gmail.com
+	smtpuser = lacombar@gmail.com
+	smtpssl = true
+[help]
+	autocorrect = 1
+[merge]
+	ff = false
+[color]
+	branch = auto
+	diff = auto
+	status = auto
+	grep = auto
+[color "branch"]
+	current = black bold
+[color "diff"]
+	meta = 0
+	frag = black bold
+	old = 4
+	new = 5
+	whitespace = 5 reverse
+[color "status"]
+	header = 0 bold
+	added = 4
+	updated = 4
+	changed = 5
+	untracked = 0
+[alias]
+	b = branch
+	co = checkout
+	cp = cherry-pick
+        d = describe
+	ds = diff --stat
+	empty-commit = commit --allow-empty
+	l = log
+	lo = log --pretty=oneline
+	ls = log --stat
+	lp = log -p
+	h = rev-parse --abbrev-ref HEAD
+	p = push
+	r = remote
+        s = show
+	ss = show --stat
+	blog = !git log $(git merge-base master HEAD)..HEAD
+	oblog = !git log --pretty=oneline $(git merge-base master HEAD)..HEAD
+	omblog = !sh -c 'git log --pretty=oneline $(git merge-base master $1)..$1' -
+	olog = !git log --pretty=oneline
+[cola]
+	fontui = Nimbus Sans L,8,-1,5,50,0,0,0,0,0
+	fontdiff = Courier 10 Pitch,9,-1,5,50,0,0,0,0,0
+
+[diff "default"]
+	xfuncname = "^[[:alpha:]$_].*[^:]$"

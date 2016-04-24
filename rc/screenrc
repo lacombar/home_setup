@@ -1,0 +1,23 @@
+screen 7
+screen 6
+screen 5
+screen 4
+screen 3
+screen 2
+screen 1
+screen 0
+
+hardcopydir ~/.screen
+
+scrollback 20000
+
+termcapinfo rxvt* 'hs:ts=\E]2;:fs=\007:ds=\E]2;\007'
+
+hardstatus alwaysfirstline
+hardstatus string '%{= .} [ %H - %S ][ %w%=][%C%a %d-%m-%Y ] '
+
+#
+#backtick 1 5 5 true
+#hardstatus string "screen (%n: %t)"
+#caption string "%{= kw}%Y-%m-%d;%c %{= kw}%-Lw%{= kG}%{+b}[%n %t]%{-b}%{= kw}%+Lw%1`"
+#caption always

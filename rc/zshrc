@@ -1,0 +1,371 @@
+function set_path() {
+	local _newdir="$1";
+	local _op="$2"
+
+	if [ ! -d "${_newdir}" ]; then
+		return 1
+	fi
+
+	PATH=$(
+	awk 'BEGIN { path = "'${PATH}'"; dir = "'${_newdir}'";
+
+	    gsub(/\/\//, "/", path);
+	    gsub(/\/\//, "/", dir);
+	    edir = dir;
+	    gsub(/\//, "\\/", edir);
+
+	    path_suffix = "";
+	    path_prefix = "";
+	    if (path !~ edir) {
+		if ("'${_op}'" == "1" ) {
+	    		path_suffix = ":" dir;
+	    	} else {
+	    		path_prefix = dir ":";
+	    	}
+	    }
+	    print path_prefix path path_suffix;
+	    exit};')
+	export PATH
+}
+
+function append_to_path() {
+	set_path "$1" "1"
+}
+
+function prepend_to_path() {
+	set_path "$1" "0"
+}
+
+function set_alias() {
+	local _alias=$1
+	local _cmd=$2
+	shift 2
+
+	#echo "$CMD -> "$(which $CMD)
+	silent_which "${_cmd}" && alias ${_alias}="${_cmd} $@"
+}
+
+function unset_alias() {
+	local _alias=$1
+
+	unalias ${_alias}
+}
+
+# Public function
+function regrep()
+{
+
+	grep -r '\<'$1'\>' $2
+}
+
+function rgrep()
+{
+
+	grep -r $1 $2
+}
+
+function fork_home()
+{
+	if term_is_screen; then
+		echo "Home fork forbidden from inside a screen session."
+		return;
+	fi
+
+	if [ -e .alternate_zshrc ]; then
+		echo "Current directory has already forked... Baka!"
+		return;
+	fi
+
+	echo 'HOME="$(pwd)"' > .alternate_zshrc
+
+	# Add common config
+	for f in .cscope .gitconfig .gdbinit .vimrc .vim; do
+		[ -e "$HOME/${f}" ]	&& ln -s "$HOME/${f}"	${f}
+	done
+}
+
+function get_cflags()
+{
+	local level=$1
+	local cflags
+	local cflags0
+	local cflags1
+	local cflags2
+	local cflags3
+
+	cflags0=
+	cflags0="${cflags0} -Wall -Wstrict-prototypes -Wmissing-prototypes"
+	cflags0="${cflags0} -Wpointer-arith -Wmissing-declarations"
+	cflags0="${cflags0} -Wredundant-decls -Wnested-externs "
+	cflags0="${cflags0} -Wno-sign-compare -Wno-traditional"
+	cflags0="${cflags0} -Wa,--fatal-warnings"
+	cflags0="${cflags0} -Wl,--fatal-warnings"
+
+	cflags1=
+	cflags1="${cflags1} -Wreturn-type -Wswitch -Wshadow"
+
+	cflags2=
+	cflags2="${cflags2} -Wcast-qual -Wwrite-strings -Wextra"
+	cflags2="${cflags2} -Wno-unused-parameter"
+
+	cflags3=
+	cflags3="${cflags3} -std=gnu99"
+
+	cflags=
+	test ${level} -gt 0 && cflags="${cflags} ${cflags0}"
+	test ${level} -gt 1 && cflags="${cflags} ${cflags1}"
+	test ${level} -gt 2 && cflags="${cflags} ${cflags2}"
+	test ${level} -gt 3 && cflags="${cflags} ${cflags3}"
+
+	echo ${cflags}
+}
+
+function term_is_screen()
+{
+	test -z ${TERM##screen*}
+}
+
+function silent_which()
+{
+	local _cmd=$1
+
+	which "${_cmd}" > /dev/null 2>&1
+}
+
+UNAME=$(uname)
+
+SYSTEM=$(uname -s)
+MACHINE=$(uname -m)
+
+# Set package managment directory for each arch
+case $UNAME in
+	"Linux"|"FreeBSD")
+		PKG_ALIAS="local"
+		;;
+	"NetBSD")
+		PKG_ALIAS="pkg"
+		;;
+esac
+
+# Standard UNIX ${PATH}
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
+
+# Extra UNIX
+append_to_path	"/usr/X11R6/bin"
+append_to_path	"/usr/games"
+
+# Package search path
+append_to_path	"/usr/${PKG_ALIAS}/bin"
+append_to_path	"/usr/${PKG_ALIAS}/sbin"
+append_to_path	"/usr/${PKG_ALIAS}/xorg/bin"
+
+# Home search path
+prepend_to_path	"/home/al/bin"
+prepend_to_path	"/home/al/${PKG_ALIAS}/bin"
+
+OPTDIR="/data/opt/${SYSTEM}/${MACHINE}"
+if [ -d "${OPTDIR}" ]; then
+	local _bindir
+
+	for _bindir in $(find "${OPTDIR}" -type d -name "bin"); do
+		if [ -z ${_bindir%%*_DISABLED/*} ]; then
+			continue;
+		fi
+
+		prepend_to_path "${_bindir}"
+	done
+fi
+
+# Publish it to the real world
+export PATH
+
+set_alias	"bc"	"bc" "-lq"
+set_alias	"crxs"	"xset" "dpms force off"
+set_alias	"he"	"hexedit"
+set_alias	"mp"	"mplayer" "-vo xv -ao sdl"
+set_alias	"mutt"	"mutt" "-y"
+set_alias	"vi"	"vim.sh"
+
+set_alias	"ls"	"ls"	"--color=none"
+
+set_alias	"tohex" "printf" "'0x%x\n' $1"
+set_alias	"todec" "printf" "'%ld\n' $1"
+set_alias	"toudec" "printf" "'%lu\n' $1"
+
+# OS specific
+case $UNAME in
+	"FreeBSD")
+		bindkey '' delete-char
+		alias ls="ls -G"
+		export LSCOLORS="exexxxxxcxxxxxcgxxxxxx"
+		;;
+	"NetBSD")
+		alias ls="ls -F"
+		;;
+	"Linux")
+		LS_COLORS="rs=0"
+		LS_COLORS="${LS_COLORS}:di=00;34"
+		LS_COLORS="${LS_COLORS}:ln=00;30"
+		LS_COLORS="${LS_COLORS}:mh=00"
+		LS_COLORS="${LS_COLORS}:pi=40;33"
+		LS_COLORS="${LS_COLORS}:so=00;35"
+		LS_COLORS="${LS_COLORS}:do=00;35"
+		LS_COLORS="${LS_COLORS}:bd=40;33;01"
+		LS_COLORS="${LS_COLORS}:cd=40;33;01"
+		LS_COLORS="${LS_COLORS}:or=40;31;01"
+		LS_COLORS="${LS_COLORS}:su=37;41"
+		LS_COLORS="${LS_COLORS}:sg=30;43"
+		LS_COLORS="${LS_COLORS}:ca=30;41"
+		LS_COLORS="${LS_COLORS}:tw=30;42"
+		LS_COLORS="${LS_COLORS}:ow=34;42"
+		LS_COLORS="${LS_COLORS}:st=37;44"
+		LS_COLORS="${LS_COLORS}:ex=00;32"
+		LS_COLORS="${LS_COLORS}:"
+		export LS_COLORS
+		alias ls="ls --color"
+		;;
+esac
+
+export PAGER="less"
+
+export dl="/data/.download"
+
+# Some usefull function ...
+# local function, need to unfunction them at the end ...
+#function is_read_only() {
+#	if [ "x$1" = "x" ]; then
+#		1="."; # override arg is empty
+#	fi
+#
+#	m_point=$(df -h $1 | awk '/^\// {print $6}');
+#
+#	return $(mount | grep " $m " | grep -c read-only);
+#}
+
+# load a custom rc file if present
+if [ -e .alternate_zshrc ]; then 
+	. ./.alternate_zshrc
+fi
+
+LANG=C
+
+HISTFILE=~/.shell_history
+HISTSIZE=10000
+SAVEHIST=15000
+
+#if term_is_screen; then
+#	if [ -n "$STY" -a "${STY##*.}" != "$(hostname)" ]; then
+#	#	if [ "$HOST" != "" -a "$SSH_TTY" != "" ]; then
+#	#		PS1_PREFIX="@"$HOST
+#	#	fi
+#		PS1_PREFIX='<'${STY##*.}"$PS1_PREFIX> "
+#	fi
+#fi
+
+if ! term_is_screen && [ -n "${SSH_TTY}" ]; then
+	PS1_PREFIX="$PS1_PREFIX%n@%m:"
+fi
+
+PS1="$PS1_PREFIX%2~/%# "
+unset PS1_PREFIX
+
+bindkey -e
+bindkey "" backward-delete-char
+bindkey "^[[1~" beginning-of-line
+bindkey "^[[3~" delete-char
+bindkey "^[[4~" end-of-line
+bindkey "^[[5~" beginning-of-line
+bindkey "^[[6~" end-of-line
+bindkey "^[[7~" beginning-of-line
+bindkey "^[[8~" end-of-line
+bindkey "^r" history-incremental-pattern-search-backward
+
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt INC_APPEND_HISTORY
+setopt SHARE_HISTORY
+setopt nonomatch
+setopt AUTO_CD
+
+# remove local function
+#unfunction is_read_only
+
+#
+# Workaround a bug in screen(1) when it is called with `-dm', $TERMCAP is
+# build without display and thus is missing capabilities.
+if term_is_screen; then
+	unset TERMCAP
+	TERMCAP="SC|$TERM|VT 101/ANSI X3.64 virtual terminal:\\ \n"\
+"        :DO=\\E[%dB:LE=\\E[%dD:RI=\\E[%dC:UP=\\E[%dA:bs:bt=\\E[Z:\\ \n"\
+"        :cd=\\E[J:ce=\\E[K:cl=\\E[H\\E[J:cm=\\E[%i%d;%dH:ct=\\E[5g:\\  \n"\
+"        :do=^J:nd=\\E[C:pt:rc=\\E8:rs=\\Ec:sc=\\E7:st=\\EH:up=\\EM:\\ \n"\
+"        :le=^H:bl=^G:cr=^M:it#8:ho=\\E[H:nw=\\EE:ta=^I:is=\\E(B:\\ \n"\
+"        :li#58:co#169:am:xn:xv:LP:sr=\\EM:al=\\E[L:AL=\\E[%dL:cs=\\E[%i%d;%dr:\\ \n"\
+"        :dl=\\E[M:DL=\\E[%dM:dc=\\E[P:DC=\\E[%dP:im=\\E[4h:ei=\\E[4l:mi:IC=\\E[%d@:\\ \n"\
+"        :ks=\\E[?1h\\E=:ke=\\E[?1l\\E>:vi=\\E[?25l:ve=\\E[34h\\E[?25h:vs=\\E[34l:\\ \n"\
+"        :ti=\\E[?1049h:te=\\E[?1049l:us=\\E[4m:ue=\\E[24m:so=\\E[3m:se=\\E[23m:\\ \n"\
+"        :mb=\\E[5m:md=\\E[1m:mr=\\E[7m:me=\\E[m:ms:\\ \n"\
+"        :Co#8:pa#64:AF=\\E[3%dm:AB=\\E[4%dm:op=\\E[39;49m:AX:vb=\\Eg:G0:as=\\E(0:\\ \n"\
+"        :k0=\\E[10~:k1=\\EOP:k2=\\EOQ:k3=\\EOR:k4=\\EOS:k5=\\E[15~:k6=\\E[17~:\\ \n"\
+"        :k7=\\E[18~:k8=\\E[19~:k9=\\E[20~:k;=\\E[21~:F1=\\E[23~:F2=\\E[24~:kb=^H:\\ \n"\
+"        :K1=\\EOw:K2=\\EOu:K3=\\EOy:K4=\\EOq:K5=\\EOs:kH=\\E[1~:@7=\\E[1~:kh=\\E[4~:\\ \n"\
+"        :@1=\\E[4~:kN=\\E[6~:kP=\\E[5~:kI=\\E[2~:kD=\\E[3~:ku=\\EOA:kd=\\EOB:kr=\\EOC:\" \n"
+#"        :ac=\\140\\140aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~..--++,,hhII00:\\ \n"\
+#"        :ae=\\E(B:\\ \n"\
+fi
+
+if term_is_screen && silent_which "wmctrl" && [ -n "${DISPLAY}" ]; then
+	HOSTNAME=$(hostname)
+	DESKTOP_ID=$(wmctrl -d | sed '/\([0-9]*\) *\* .*/!d; s//\1/')
+	case "${HOSTNAME}" in
+	"hostname")
+		case "${DESKTOP_ID}" in
+		[0-2])
+			;;
+		[4-6])
+			;;
+		[7-9])
+			;;
+		1[1-3])
+			;;
+		esac
+		;;
+	esac
+fi
+
+if [ "$TERM" = "screen.rxvt" ]; then
+	TERM="screen"
+fi
+
+function set_title
+{
+	if [ $TERM = "screen" ]; then
+		# Use these two for GNU Screen:
+		print -nR $'\033k'$1$'\033'\\
+		#print -nR $'\033]0;'$2$'\a'
+	elif [ $TERM = "xterm" -o $TERM = "rxvt" ]; then
+		# Use this one instead for XTerms:
+		print -nR $'\033]0;'$*$'\a'
+	fi
+}
+
+function precmd
+{
+	local _title=""
+
+	if [ "${PWD}" = "${HOME}" ]; then
+		_title="~/"
+	else
+		_title="${PWD##*/}/"
+	fi
+
+	set_title "${_title}"
+}
+
+function preexec
+{
+	emulate -L zsh
+	local -a cmd; cmd=(${(z)1})
+	set_title $cmd[1]:t "$cmd[2,-1]"
+}
