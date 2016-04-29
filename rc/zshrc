@@ -288,6 +288,8 @@ setopt SHARE_HISTORY
 setopt nonomatch
 setopt AUTO_CD
 
+unset SSH_ASKPASS
+
 # remove local function
 #unfunction is_read_only
 

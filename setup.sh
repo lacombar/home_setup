@@ -156,6 +156,10 @@ setup_packages()
 	echo " * Configuring dnf-automatic"
 	sudo systemctl start dnf-automatic.timer
 	sudo systemctl enable dnf-automatic.timer
+
+	echo " * Removing useless crap"
+	sudo dnf remove -y \
+		openssh-askpass
 }
 
 setup_ssh()
