@@ -84,6 +84,7 @@ setup_packages()
 		system-config-firewall-tui \
 		tmux \
 		vim \
+		w3m \
 		wget \
 		zsh
 
