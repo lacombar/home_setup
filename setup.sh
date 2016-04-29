@@ -133,6 +133,11 @@ setup_packages()
 		lua \
 		tig
 
+	echo " * Installing virtualization tools"
+	sudo dnf install -y \
+		qemu \
+		virt-manager
+
 	echo " * Installing misc development libraries"
 	sudo dnf install -y \
 		docker-devel \
