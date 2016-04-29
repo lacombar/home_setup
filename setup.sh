@@ -133,6 +133,11 @@ setup_packages()
 		lua \
 		tig
 
+	echo " * Installing virtualization tools"
+	sudo dnf install -y \
+		qemu \
+		virt-manager
+
 	echo " * Installing misc development libraries"
 	sudo dnf install -y \
 		docker-devel \
@@ -151,6 +156,32 @@ setup_packages()
 	echo " * Configuring dnf-automatic"
 	sudo systemctl start dnf-automatic.timer
 	sudo systemctl enable dnf-automatic.timer
+
+	echo " * Removing useless crap"
+	sudo dnf remove -y \
+		openssh-askpass
+}
+
+setup_ssh()
+{
+	local _dot_ssh="${HOME}/.ssh"
+
+	local _rsa_bits=3072
+	local _dsa_bits=1024
+	local _ecdsa_bits=384
+	local _ed25519_bits=384
+
+	echo " * Generating ssh keys"
+	for _type in rsa dsa ecdsa ed25519; do
+		local _key_file="${_dot_ssh}/id_${_type}"
+
+		[ ! -e "${_key_file}" ] &&
+			eval "ssh-keygen -q -N \"\" -t ${_type} -b \${_${_type}_bits} -f \"${_key_file}\""
+	done
+
+	local _authorized_key_file="${_dot_ssh}/authorized_key"
+	touch "${_authorized_key_file}"
+	chmod 600 "${_authorized_key_file}"
 }
 
 setup_xfce4()
@@ -159,7 +190,7 @@ setup_xfce4()
 }
 
 _actions=""
-_all_actions="bin rc repositories packages xfce4"
+_all_actions="bin rc repositories packages ssh xfce4"
 
 help()
 {
@@ -189,6 +220,9 @@ case "$1" in
 		;;
 	"packages")
 		_actions="packages"
+		;;
+	"ssh")
+		_actions="ssh"
 		;;
 	"xfce4")
 		_actions="xfce4"
