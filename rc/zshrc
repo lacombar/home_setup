@@ -132,6 +132,23 @@ function silent_which()
 	which "${_cmd}" > /dev/null 2>&1
 }
 
+function add_path_alternatives()
+{
+	local _altbase="$1"
+	local _bindir
+
+	[ -d "${_altbase}" ] || \
+		return
+
+	for _bindir in $(find "${_altbase}" -type d -name "bin"); do
+		if [ -z ${_bindir%%*_DISABLED/*} ]; then
+			continue;
+		fi
+
+		prepend_to_path "${_bindir}"
+	done
+}
+
 UNAME=$(uname)
 
 SYSTEM=$(uname -s)
@@ -163,18 +180,7 @@ append_to_path	"/usr/${PKG_ALIAS}/xorg/bin"
 prepend_to_path	"/home/al/bin"
 prepend_to_path	"/home/al/${PKG_ALIAS}/bin"
 
-OPTDIR="/data/opt/${SYSTEM}/${MACHINE}"
-if [ -d "${OPTDIR}" ]; then
-	local _bindir
-
-	for _bindir in $(find "${OPTDIR}" -type d -name "bin"); do
-		if [ -z ${_bindir%%*_DISABLED/*} ]; then
-			continue;
-		fi
-
-		prepend_to_path "${_bindir}"
-	done
-fi
+add_path_alternatives "/data/opt/${SYSTEM}/${MACHINE}"
 
 # Publish it to the real world
 export PATH
