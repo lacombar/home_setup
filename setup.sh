@@ -86,6 +86,8 @@ setup_packages()
 		strace \
 		system-config-firewall-tui \
 		tmux \
+		tigervnc \
+		tigervnc-server \
 		vim \
 		w3m \
 		wget \
