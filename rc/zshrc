@@ -268,7 +268,14 @@ SAVEHIST=15000
 #	fi
 #fi
 
-if ! term_is_screen && [ -n "${SSH_TTY}" ]; then
+function ps1_need_hostname()
+{
+	[ -n "${SSH_TTY}" ] && return 0
+
+	return 1
+}
+
+if ps1_need_hostname; then
 	PS1_PREFIX="$PS1_PREFIX%n@%m:"
 fi
 
