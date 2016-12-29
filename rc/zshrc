@@ -239,7 +239,7 @@ case $UNAME in
 		LS_COLORS="${LS_COLORS}:"
 		export LS_COLORS
 
-		set_alias ls "ls --color"
+		set_alias ls "ls --color -N"
 		;;
 esac
 
