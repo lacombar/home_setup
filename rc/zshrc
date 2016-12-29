@@ -212,11 +212,11 @@ set_alias	"toudec" "printf" "'%lu\n' $1"
 case $UNAME in
 	"FreeBSD")
 		bindkey '' delete-char
-		alias ls="ls -G"
 		export LSCOLORS="exexxxxxcxxxxxcgxxxxxx"
+		set_alias ls "ls -G"
 		;;
 	"NetBSD")
-		alias ls="ls -F"
+		set_alias ls "ls -F"
 		;;
 	"Linux")
 		LS_COLORS="rs=0"
@@ -238,7 +238,8 @@ case $UNAME in
 		LS_COLORS="${LS_COLORS}:ex=00;32"
 		LS_COLORS="${LS_COLORS}:"
 		export LS_COLORS
-		alias ls="ls --color"
+
+		set_alias ls "ls --color"
 		;;
 esac
 
