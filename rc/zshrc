@@ -125,6 +125,16 @@ function term_is_screen()
 	test -z ${TERM##screen*}
 }
 
+function get_screen_name()
+{
+	if ! term_is_screen; then
+		return
+	fi
+
+	echo "${STY##*.}"
+	return
+}
+
 function silent_which()
 {
 	local _cmd=$1
