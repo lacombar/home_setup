@@ -339,25 +339,25 @@ if term_is_screen; then
 "        :@1=\\E[4~:kN=\\E[6~:kP=\\E[5~:kI=\\E[2~:kD=\\E[3~:ku=\\EOA:kd=\\EOB:kr=\\EOC:\" \n"
 #"        :ac=\\140\\140aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~..--++,,hhII00:\\ \n"\
 #"        :ae=\\E(B:\\ \n"\
-fi
 
-if term_is_screen && silent_which "wmctrl" && [ -n "${DISPLAY}" ]; then
-	HOSTNAME=$(hostname)
-	DESKTOP_ID=$(wmctrl -d | sed '/\([0-9]*\) *\* .*/!d; s//\1/')
-	case "${HOSTNAME}" in
-	"hostname")
-		case "${DESKTOP_ID}" in
-		[0-2])
-			;;
-		[4-6])
-			;;
-		[7-9])
-			;;
-		1[1-3])
+	if silent_which "wmctrl" && [ -n "${DISPLAY}" ]; then
+		HOSTNAME=$(hostname)
+		DESKTOP_ID=$(wmctrl -d | sed '/\([0-9]*\) *\* .*/!d; s//\1/')
+		case "${HOSTNAME}" in
+		"hostname")
+			case "${DESKTOP_ID}" in
+			[0-2])
+				;;
+			[4-6])
+				;;
+			[7-9])
+				;;
+			1[1-3])
+				;;
+			esac
 			;;
 		esac
-		;;
-	esac
+	fi
 fi
 
 if [ "$TERM" = "screen.rxvt" ]; then
