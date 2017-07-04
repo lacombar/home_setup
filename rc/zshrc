@@ -239,7 +239,7 @@ case $UNAME in
 		LS_COLORS="${LS_COLORS}:"
 		export LS_COLORS
 
-		set_alias ls "ls --color -N"
+		set_alias ls "ls" "--color -N"
 		;;
 esac
 
@@ -264,7 +264,10 @@ if [ -e .alternate_zshrc ]; then
 	. ./.alternate_zshrc
 fi
 
+prepend_to_path	"${HOME}/bin"
+
 LANG=C
+LC_ALL=C
 
 HISTFILE=~/.shell_history
 HISTSIZE=10000
@@ -393,5 +396,10 @@ function preexec
 {
 	emulate -L zsh
 	local -a cmd; cmd=(${(z)1})
-	set_title $cmd[1]:t "$cmd[2,-1]"
+	local _title="$cmd[1]:t"
+	if [ "$cmd[1]:t" = "ssh" ]; then
+		_title="$cmd[-1]"
+	fi
+
+	set_title $_title "$cmd[2,-1]"
 }
