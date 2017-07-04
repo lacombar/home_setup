@@ -61,6 +61,7 @@
 	oblog = !git log --pretty=oneline $(git merge-base master HEAD)..HEAD
 	omblog = !sh -c 'git log --pretty=oneline $(git merge-base master $1)..$1' -
 	olog = !git log --pretty=oneline
+	conflicts = diff --name-only --diff-filter=U
 [cola]
 	fontui = Nimbus Sans L,8,-1,5,50,0,0,0,0,0
 	fontdiff = Courier 10 Pitch,9,-1,5,50,0,0,0,0,0
