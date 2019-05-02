@@ -156,8 +156,7 @@ setup_packages()
 		openssl-devel \
 		python-devel \
 		python-pip \
-		uuid-devel \
-		zeromq3-devel \
+		uuid-devel
 
 	echo " * Configuring dnf-automatic"
 	sudo systemctl start dnf-automatic.timer

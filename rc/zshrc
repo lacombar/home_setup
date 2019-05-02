@@ -239,7 +239,7 @@ case $UNAME in
 		LS_COLORS="${LS_COLORS}:"
 		export LS_COLORS
 
-		set_alias ls "ls" "--color -N"
+		set_alias ls "ls --color -N"
 		;;
 esac
 
@@ -264,10 +264,7 @@ if [ -e .alternate_zshrc ]; then
 	. ./.alternate_zshrc
 fi
 
-prepend_to_path	"${HOME}/bin"
-
 LANG=C
-LC_ALL=C
 
 HISTFILE=~/.shell_history
 HISTSIZE=10000
@@ -293,7 +290,8 @@ if ps1_need_hostname; then
 	PS1_PREFIX="$PS1_PREFIX%n@%m:"
 fi
 
-PS1="$PS1_PREFIX%2~/%# "
+#PS1="$PS1_PREFIX%2~/%# "
+PS1="%K{0}%F{7}${PS1_PREFIX}%2~/%#%f%k "
 unset PS1_PREFIX
 
 bindkey -e
@@ -371,7 +369,8 @@ function set_title
 {
 	if [ $TERM = "screen" ]; then
 		# Use these two for GNU Screen:
-		print -nR $'\033k'$1$'\033'\\
+		#print -nR $'\033k'$1$'\033'\\
+		print -nR $'\033k'$@$'\033'\\
 		#print -nR $'\033]0;'$2$'\a'
 	elif [ $TERM = "xterm" -o $TERM = "rxvt" ]; then
 		# Use this one instead for XTerms:
@@ -396,10 +395,5 @@ function preexec
 {
 	emulate -L zsh
 	local -a cmd; cmd=(${(z)1})
-	local _title="$cmd[1]:t"
-	if [ "$cmd[1]:t" = "ssh" ]; then
-		_title="$cmd[-1]"
-	fi
-
-	set_title $_title "$cmd[2,-1]"
+	set_title $cmd[1]:t "$cmd[2,-1]"
 }
